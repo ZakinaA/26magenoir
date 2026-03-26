@@ -10,9 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.util.ArrayList;
 import model.Caserne;
 
-@WebServlet(name = "ServletCaserne", urlPatterns = {"/ServletCaserne/consulter"})
+@WebServlet(name = "ServletCaserne", urlPatterns = {"/ServletCaserne/consulter", "/ServletCaserne/lister"})
 public class ServletCaserne extends HttpServlet {
 
     Connection cnx;
@@ -37,7 +38,13 @@ public class ServletCaserne extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String url = request.getRequestURI();  
+        String url = request.getRequestURI();
+        
+        if(url.equals("/sdisweb/ServletCaserne/lister")) {
+            ArrayList<Caserne> lesCasernes = DaoCaserne.getLesCasernes(cnx);
+            request.setAttribute("pLesCasernes", lesCasernes);
+            getServletContext().getRequestDispatcher("/vues/caserne/listerCasernes.jsp").forward(request, response);
+        }
         
         if(url.equals("/sdisweb/ServletCaserne/consulter")) {  
             int idCaserne = Integer.parseInt(request.getParameter("idCaserne"));

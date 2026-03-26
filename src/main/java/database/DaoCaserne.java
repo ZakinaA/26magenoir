@@ -20,27 +20,24 @@ public class DaoCaserne {
     Connection cnx;
     static PreparedStatement requeteSql = null;
     static ResultSet resultatRequete = null;
+
     
     public static ArrayList<Caserne> getLesCasernes(Connection cnx){
-        
         ArrayList<Caserne> lesCasernes= new ArrayList<Caserne>();
         try{
-            requeteSql = cnx.prepareStatement("select * from caserne");
+            requeteSql = cnx.prepareStatement("SELECT * FROM CASERNE");
             resultatRequete = requeteSql.executeQuery();
             
             while (resultatRequete.next()){
-                
                 Caserne c = new Caserne();
-                    c.setId(resultatRequete.getInt("id"));
-                    c.setNom(resultatRequete.getString("nom"));
-
+                c.setId(resultatRequete.getInt("ID_CASERNE"));
+                c.setNom(resultatRequete.getString("NOM"));
+                c.setVille(resultatRequete.getString("VILLE"));
                 lesCasernes.add(c);
             }
-           
         }
         catch (SQLException e){
             e.printStackTrace();
-            System.out.println("La requête de getLesPompiers e généré une erreur");
         }
         return lesCasernes;
     }

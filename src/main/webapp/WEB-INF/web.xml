@@ -29,6 +29,10 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ServletCaserne</servlet-name>
+        <url-pattern>/ServletCaserne/lister</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletCaserne</servlet-name>
         <url-pattern>/ServletCaserne/consulter</url-pattern>
     </servlet-mapping>
     <session-config>
