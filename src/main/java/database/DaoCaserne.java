@@ -4,8 +4,6 @@
  */
 package database;
 
-import static database.DaoPompier.requeteSql;
-import static database.DaoPompier.resultatRequete;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,4 +45,22 @@ public class DaoCaserne {
         return lesCasernes;
     }
     
+    public static Caserne getCaserneById(Connection cnx, int idCaserne){
+        Caserne c = null;
+        try{
+            requeteSql = cnx.prepareStatement("SELECT * FROM CASERNE WHERE ID_CASERNE = ?");
+            requeteSql.setInt(1, idCaserne);
+            resultatRequete = requeteSql.executeQuery();
+            
+            if (resultatRequete.next()){
+                c = new Caserne();
+                c.setId(resultatRequete.getInt("ID_CASERNE"));
+                c.setNom(resultatRequete.getString("NOM"));
+                c.setRue(resultatRequete.getString("RUE"));
+                c.setCopos(resultatRequete.getString("COPOS"));
+                c.setVille(resultatRequete.getString("VILLE"));
+            }
+        } catch (SQLException e){ e.printStackTrace(); }
+        return c;
+    }
 }

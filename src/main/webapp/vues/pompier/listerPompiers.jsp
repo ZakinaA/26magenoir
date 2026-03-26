@@ -35,7 +35,15 @@
                             </a>
                         </td>
                         <td><%= p.getPrenom() %></td>
-                        <td><%= (p.getUneCaserne() != null) ? p.getUneCaserne().getNom() : "N/A" %></td>
+                        <td>
+                        <% if (p.getUneCaserne() != null) { %>
+                        <a href="../ServletCaserne/consulter?idCaserne=<%= p.getUneCaserne().getId() %>">
+                        <%= p.getUneCaserne().getNom() %>
+                        </a>
+                        <% } else { %>
+                        N/A
+                        <% } %>
+                        </td>
                     </tr>
                 <% } } %>
             </tbody>
