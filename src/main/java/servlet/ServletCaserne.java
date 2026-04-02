@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import model.Caserne;
 import model.Engin;
 
-@WebServlet(name = "ServletCaserne", urlPatterns = {"/ServletCaserne/consulter", "/ServletCaserne/lister" ,"/ServletCaserne/modifier"})
+@WebServlet(name = "ServletCaserne", urlPatterns = {"/ServletCaserne/consulter", "/ServletCaserne/lister" ,"/ServletCaserne/modifier", "/ServletCaserne/engins"})
 public class ServletCaserne extends HttpServlet {
 
     Connection cnx;
@@ -61,30 +61,19 @@ public class ServletCaserne extends HttpServlet {
             request.setAttribute("pCaserne", c);
             getServletContext().getRequestDispatcher("/vues/caserne/modifierCaserne.jsp").forward(request, response);
         }
-        // Import à ajouter en haut : import database.DaoEngin; import model.Engin;
-
-        // Dans la méthode doGet() :
-        String urlRequete = request.getRequestURI();
-
-        // ... vos autres conditions (listerCasernes, consulterCaserne...)
-
-        // NOUVELLE CONDITION A AJOUTER :
-        if (urlRequete.equals(request.getContextPath() + "/ServletCaserne/engins")) {
-        // 1. Récupération de l'ID de la caserne cliquée
+        if (url.equals("/sdisweb/ServletCaserne/engins")) {
         int idCaserne = Integer.parseInt(request.getParameter("idCaserne"));
     
-        // 2. Appel du DAO pour récupérer la liste des engins
+        // Récupération de la liste des engins et des infos de la caserne
         ArrayList<Engin> lesEngins = DaoEngin.getLesEnginsByCaserne(cnx, idCaserne);
+        Caserne c = DaoCaserne.getCaserneById(cnx, idCaserne);
     
-        // Optionnel : récupérer aussi la caserne pour afficher son nom dans le titre
-        Caserne laCaserne = DaoCaserne.getCaserneById(cnx, idCaserne);
-    
-        // 3. Stockage dans les attributs de la requête
+        // Stockage dans les attributs de la requête
         request.setAttribute("pLesEngins", lesEngins);
-        request.setAttribute("pLaCaserne", laCaserne);
+        request.setAttribute("pCaserne", c);
     
-        // 4. Redirection vers le nouveau JSP
-        getServletContext().getRequestDispatcher("/listerEnginsCaserne.jsp").forward(request, response);
+        // Redirection vers la vue (placée dans le dossier vues/caserne pour la cohérence)
+        getServletContext().getRequestDispatcher("/vues/caserne/listerEnginsCaserne.jsp").forward(request, response);
         }
     }
 

@@ -43,6 +43,10 @@
         <servlet-name>ServletCaserne</servlet-name>
         <url-pattern>/ServletCaserne/modifier</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>ServletCaserne</servlet-name>
+    <url-pattern>/ServletCaserne/engins</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
