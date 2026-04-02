@@ -50,6 +50,10 @@
                             </a>
                         </td>
                         <td><%= (c.getVille() != null) ? c.getVille() : "N/A" %></td>
+                        <th>Action</th>
+                        <td><a href="${pageContext.request.contextPath}/ServletCaserne/engins?idCaserne=${c.id}" class="btn btn-info">
+                        Voir les engins</a>
+                        </td>
                     </tr>
                 <% } } else { %>
                     <tr>
