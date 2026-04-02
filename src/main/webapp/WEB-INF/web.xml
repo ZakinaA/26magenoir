@@ -24,6 +24,10 @@
         <url-pattern>/ServletPompier/ajouter</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>ServletPompier</servlet-name>
+        <url-pattern>/ServletPompier/modifier</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>ServletCaserne</servlet-name>
         <url-pattern>/ServletCaserne</url-pattern>
     </servlet-mapping>

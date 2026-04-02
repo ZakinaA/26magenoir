@@ -50,6 +50,8 @@
             <p style="color:red;">Erreur : Impossible de trouver ce pompier.</p>
         <% } %>
         <br>
+        <a href="../ServletPompier/modifier?idPompier=<%= p.getId() %>" style="display:inline-block; padding:10px; background-color:#ffc107; color:black; text-decoration:none; border-radius:5px;">✏️ Modifier</a>
+        <br>
         <a href="../ServletPompier/lister">← Retour à la liste</a>
     </div>
 </body>

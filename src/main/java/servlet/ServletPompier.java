@@ -8,12 +8,13 @@ import database.DaoCaserne;
 import database.DaoPompier;
 import form.FormPompier;
 import jakarta.servlet.ServletContext;
-import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.util.ArrayList;
 import model.Caserne;
@@ -23,6 +24,7 @@ import model.Pompier;
  *
  * @author zakina
  */
+@WebServlet(name = "ServletPompier", urlPatterns = {"/ServletPompier/consulter", "/ServletPompier/lister", "/ServletPompier/ajouter", "/ServletPompier/modifier"})
 public class ServletPompier extends HttpServlet {
 
      Connection cnx ;
@@ -108,7 +110,12 @@ public class ServletPompier extends HttpServlet {
             this.getServletContext().getRequestDispatcher("/vues/pompier/ajouterPompier.jsp" ).forward( request, response );
         }
         
-        
+        if(url.equals("/sdisweb/ServletPompier/modifier")) {
+            int idPompier = Integer.parseInt(request.getParameter("idPompier"));
+            Pompier p = DaoPompier.getPompierById(cnx, idPompier);
+            request.setAttribute("pPompier", p);
+            getServletContext().getRequestDispatcher("/vues/pompier/modifierPompier.jsp").forward(request, response);
+        }
         
         
     }
@@ -121,54 +128,63 @@ public class ServletPompier extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-         FormPompier form = new FormPompier();
-		
-        /* Appel au traitement et à la validation de la requête, et récupération du bean en résultant */
-        Pompier p = form.ajouterPompier(request);
+        // On récupère l'URL pour savoir quelle action on doit faire
+        String url = request.getRequestURI();
         
-        /* Stockage du formulaire et de l'objet dans l'objet request */
-        request.setAttribute( "form", form );
-        request.setAttribute( "pPompier", p );
-		
-        if (form.getErreurs().isEmpty()){
-            Pompier pompierInsere =  DaoPompier.addPompier(cnx, p);
-            if (pompierInsere != null ){
-                request.setAttribute( "pPompier", pompierInsere );
-                this.getServletContext().getRequestDispatcher("/vues/pompier/consulterPompier.jsp" ).forward( request, response );
+        
+        // ACTION 1 : AJOUTER UN POMPIER
+        if(url.equals("/sdisweb/ServletPompier/ajouter")) {
+            FormPompier form = new FormPompier();
+            
+            /* Appel au traitement et à la validation de la requête, et récupération du bean en résultant */
+            Pompier p = form.ajouterPompier(request);
+            
+            /* Stockage du formulaire et de l'objet dans l'objet request */
+            request.setAttribute( "form", form );
+            request.setAttribute( "pPompier", p );
+            
+            if (form.getErreurs().isEmpty()){
+                Pompier pompierInsere =  DaoPompier.addPompier(cnx, p);
+                if (pompierInsere != null ){
+                    request.setAttribute( "pPompier", pompierInsere );
+                    this.getServletContext().getRequestDispatcher("/vues/pompier/consulterPompier.jsp" ).forward( request, response );
+                }
+                else {
+                    // Cas où l'insertion en bdd a échoué
+                }
             }
-            else 
-            {
-                // Cas oùl'insertion en bdd a échoué
-                //renvoyer vers une page d'erreur 
+            else { 
+                // il y a des erreurs. On réaffiche le formulaire
+                ArrayList<Caserne> lesCasernes = DaoCaserne.getLesCasernes(cnx);
+                request.setAttribute("pLesCasernes", lesCasernes);
+                this.getServletContext().getRequestDispatcher("/vues/pompier/ajouterPompier.jsp" ).forward( request, response );
             }
-           
         }
-        else
-        { 
-            // il y a des erreurs. On réaffiche le formulaire avec des messages d'erreurs
-            ArrayList<Caserne> lesCasernes = DaoCaserne.getLesCasernes(cnx);
-            request.setAttribute("pLesCasernes", lesCasernes);
-            this.getServletContext().getRequestDispatcher("/vues/pompier/ajouterPompier.jsp" ).forward( request, response );
+        
+       
+        // ACTION 2 : MODIFIER UN POMPIER
+        else if(url.equals("/sdisweb/ServletPompier/modifier")) {
+            Pompier p = new Pompier();
+            p.setId(Integer.parseInt(request.getParameter("idPompier")));
+            p.setNom(request.getParameter("nom"));
+            p.setPrenom(request.getParameter("prenom"));
+            p.setDateNaiss(request.getParameter("dateNaiss"));
+            
+            // Mise à jour dans la base de données
+            DaoPompier.updatePompier(cnx, p);
+            
+            // Redirection vers la page de consultation du pompier modifié
+            response.sendRedirect(request.getContextPath() + "/ServletPompier/consulter?idPompier=" + p.getId());
         }
+    }
         
         
         
         
         
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
-}

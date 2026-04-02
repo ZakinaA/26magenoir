@@ -100,4 +100,17 @@ public class DaoPompier {
         } catch (SQLException e) { e.printStackTrace(); }
         return p;    
     }
+    
+    public static Pompier updatePompier(Connection cnx, Pompier p){
+        try{
+            // On met à jour les champs 
+            requeteSql = cnx.prepareStatement("UPDATE POMPIER SET NOM = ?, PRENOM = ?, DATENAISS = ? WHERE MATRICULE = ?");
+            requeteSql.setString(1, p.getNom());
+            requeteSql.setString(2, p.getPrenom());
+            requeteSql.setString(3, p.getDateNaiss());
+            requeteSql.setInt(4, p.getId());
+            requeteSql.executeUpdate();
+        } catch (SQLException e){ e.printStackTrace(); }
+        return p;
+    }
 }
