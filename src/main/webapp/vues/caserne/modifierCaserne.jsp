@@ -42,5 +42,8 @@
             <a href="../ServletCaserne/consulter?idCaserne=<%= c.getId() %>" style="margin-left: 10px; color: red;">Annuler</a>
         </form>
     </div>
+        <div class="container"> <div class="header-left">
+            <jsp:include page="/vues/inclusions/footer.jsp" />
+        </div>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package servlet;
 
 import database.DaoCaserne;
+import database.DaoEngin;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,8 +13,9 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.util.ArrayList;
 import model.Caserne;
+import model.Engin;
 
-@WebServlet(name = "ServletCaserne", urlPatterns = {"/ServletCaserne/consulter", "/ServletCaserne/lister" ,"/ServletCaserne/modifier"})
+@WebServlet(name = "ServletCaserne", urlPatterns = {"/ServletCaserne/consulter", "/ServletCaserne/lister" ,"/ServletCaserne/modifier", "/ServletCaserne/engins"})
 public class ServletCaserne extends HttpServlet {
 
     Connection cnx;
@@ -58,6 +60,20 @@ public class ServletCaserne extends HttpServlet {
             Caserne c = DaoCaserne.getCaserneById(cnx, idCaserne);
             request.setAttribute("pCaserne", c);
             getServletContext().getRequestDispatcher("/vues/caserne/modifierCaserne.jsp").forward(request, response);
+        }
+        if (url.equals("/sdisweb/ServletCaserne/engins")) {
+        int idCaserne = Integer.parseInt(request.getParameter("idCaserne"));
+    
+        // Récupération de la liste des engins et des infos de la caserne
+        ArrayList<Engin> lesEngins = DaoEngin.getLesEnginsByCaserne(cnx, idCaserne);
+        Caserne c = DaoCaserne.getCaserneById(cnx, idCaserne);
+    
+        // Stockage dans les attributs de la requête
+        request.setAttribute("pLesEngins", lesEngins);
+        request.setAttribute("pCaserne", c);
+    
+        // Redirection vers la vue (placée dans le dossier vues/caserne pour la cohérence)
+        getServletContext().getRequestDispatcher("/vues/caserne/listerEnginsCaserne.jsp").forward(request, response);
         }
     }
 

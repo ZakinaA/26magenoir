@@ -12,10 +12,18 @@
             th, td { border: 1px solid black; padding: 10px; text-align: left; }
             th { background-color: #eee; }
             
+            /* Bouton Accueil */
+            .btn-accueil {
+                display: inline-block; padding: 10px 20px; font-size: 1.1em;
+                color: white; background-color: #dc3545; text-decoration: none;
+                border-radius: 8px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+            }
+            .btn-accueil:hover { background-color: #c82333; }
+            .header-left { text-align: left; margin: 20px; }
         </style>
     </head>
     <body>
-        <div class="header-left">
+        <div class="container"> <div class="header-left">
             <jsp:include page="/vues/inclusions/header.jsp" />
         </div>
         
@@ -29,6 +37,7 @@
                     <th>ID Caserne</th>
                     <th>Nom</th>
                     <th>Ville</th>
+                    <th>Engin</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +51,11 @@
                             </a>
                         </td>
                         <td><%= (c.getVille() != null) ? c.getVille() : "N/A" %></td>
+                        <td>
+                            <a href="../ServletCaserne/engins?idCaserne=<%= c.getId() %>">
+                                Voir les engins
+                            </a>
+                        </td>
                     </tr>
                 <% } } else { %>
                     <tr>
@@ -50,7 +64,7 @@
                 <% } %>
             </tbody>
         </table>
-        <div class="header-left">
+        <div class="container"> <div class="header-left">
             <jsp:include page="/vues/inclusions/footer.jsp" />
         </div>
     </body>

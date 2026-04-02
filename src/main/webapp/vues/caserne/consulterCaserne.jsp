@@ -12,6 +12,9 @@
     </style>
 </head>
 <body>
+    <div class="container"> <div class="header-left">
+            <jsp:include page="/vues/inclusions/header.jsp" />
+        </div>
     <div class="container">
         <h1>Détail de la Caserne</h1>
         <%
@@ -39,6 +42,10 @@
         <% } %>
         <br>
         <a href="../ServletCaserne/modifier?idCaserne=<%= c.getId() %>" style="display:inline-block; padding:10px; background-color:#ADD8E6; color:black; text-decoration:none; border-radius:5px;">✏️ Modifier</a>
+        <br>
+        <div class="container"> <div class="header-left">
+            <jsp:include page="/vues/inclusions/footer.jsp" />
+        </div>
         <br>
         <a href="../ServletPompier/lister">← Retour à la liste des pompiers</a>
     </div>

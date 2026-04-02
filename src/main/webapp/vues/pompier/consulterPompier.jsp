@@ -12,6 +12,9 @@
     </style>
 </head>
 <body>
+    <div class="container"> <div class="header-left">
+            <jsp:include page="/vues/inclusions/header.jsp" />
+        </div>
     <div class="container">
         <h1>Détail du Pompier</h1>
         <%
@@ -51,6 +54,10 @@
         <% } %>
         <br>
         <a href="../ServletPompier/modifier?idPompier=<%= p.getId() %>" style="display:inline-block; padding:10px; background-color:#ffc107; color:black; text-decoration:none; border-radius:5px;">✏️ Modifier</a>
+        <br>
+        <div class="container"> <div class="header-left">
+            <jsp:include page="/vues/inclusions/footer.jsp" />
+        </div>
         <br>
         <a href="../ServletPompier/lister">← Retour à la liste</a>
     </div>
