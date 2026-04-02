@@ -43,6 +43,9 @@
         <servlet-name>ServletCaserne</servlet-name>
         <url-pattern>/ServletCaserne/modifier</url-pattern>
     </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
     <session-config>
         <session-timeout>
             30
