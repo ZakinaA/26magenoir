@@ -1,283 +1,283 @@
--- phpMyAdmin SQL Dump
+-- phpmyadmin sql dump
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+set sql_mode = "no_auto_value_on_zero";
+start transaction;
+set time_zone = "+00:00";
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 set @old_character_set_client=@@character_set_client */;
+/*!40101 set @old_character_set_results=@@character_set_results */;
+/*!40101 set @old_collation_connection=@@collation_connection */;
+/*!40101 set names utf8mb4 */;
 
--- Désactivation temporaire des contraintes de clés étrangères pour réinitialiser la base proprement
-SET FOREIGN_KEY_CHECKS = 0;
-
--- --------------------------------------------------------
--- 1. SUPPRESSION DES TABLES EXISTANTES
--- --------------------------------------------------------
-DROP TABLE IF EXISTS `engin`;
-DROP TABLE IF EXISTS `envoyer`;
-DROP TABLE IF EXISTS `habiliter`;
-DROP TABLE IF EXISTS `necessiter`;
-DROP TABLE IF EXISTS `pompier`;
-DROP TABLE IF EXISTS `caserne`;
-DROP TABLE IF EXISTS `categoriegrade`;
-DROP TABLE IF EXISTS `fonction`;
-DROP TABLE IF EXISTS `grade`;
-DROP TABLE IF EXISTS `intervention`;
-DROP TABLE IF EXISTS `profession`;
-DROP TABLE IF EXISTS `situation`;
-DROP TABLE IF EXISTS `typeengin`;
+-- désactivation temporaire des contraintes de clés étrangères pour réinitialiser la base proprement
+set foreign_key_checks = 0;
 
 -- --------------------------------------------------------
--- 2. CRÉATION DES TABLES
+-- 1. suppression des tables existantes
 -- --------------------------------------------------------
-
-CREATE TABLE `caserne` (
-  `ID_CASERNE` int(11) NOT NULL AUTO_INCREMENT,
-  `NOM` varchar(100) DEFAULT NULL,
-  `RUE` varchar(255) DEFAULT NULL,
-  `COPOS` varchar(5) DEFAULT NULL,
-  `VILLE` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ID_CASERNE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `categoriegrade` (
-  `ID_CATEGORIEGRADE` int(11) NOT NULL AUTO_INCREMENT,
-  `LIBELLE` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ID_CATEGORIEGRADE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `engin` (
-  `ID_ENGIN` int(11) NOT NULL AUTO_INCREMENT,
-  `LIBELLE` varchar(100) DEFAULT NULL,
-  `NUMEROORDRE` int(11) DEFAULT NULL,
-  `ID_CASERNE` int(11) DEFAULT NULL,
-  `ID_TYPEENGIN` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID_ENGIN`),
-  KEY `FK_ENGIN_CASERNE` (`ID_CASERNE`),
-  KEY `FK_ENGIN_TYPE` (`ID_TYPEENGIN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `envoyer` (
-  `ID_INTERVENTION` int(11) NOT NULL,
-  `MATRICULE` int(11) NOT NULL,
-  PRIMARY KEY (`ID_INTERVENTION`,`MATRICULE`),
-  KEY `FK_ENV_POMPIER` (`MATRICULE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `fonction` (
-  `CODE_FONCTION` varchar(10) NOT NULL,
-  `LIBELLE` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`CODE_FONCTION`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `grade` (
-  `ID_GRADE` int(11) NOT NULL AUTO_INCREMENT,
-  `LIBELLE` varchar(100) DEFAULT NULL,
-  `ID_CATEGORIEGRADE` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID_GRADE`),
-  KEY `FK_GRADE_CAT` (`ID_CATEGORIEGRADE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `habiliter` (
-  `MATRICULE` int(11) NOT NULL,
-  `CODE_FONCTION` varchar(10) NOT NULL,
-  PRIMARY KEY (`MATRICULE`,`CODE_FONCTION`),
-  KEY `FK_HAB_FONCTION` (`CODE_FONCTION`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `intervention` (
-  `ID_INTERVENTION` int(11) NOT NULL AUTO_INCREMENT,
-  `LIEU` varchar(255) DEFAULT NULL,
-  `DATE_INTER` date DEFAULT NULL,
-  `HEUREAPPEL` time DEFAULT NULL,
-  `HEUREARRIVE` time DEFAULT NULL,
-  `DUREE` time DEFAULT NULL,
-  PRIMARY KEY (`ID_INTERVENTION`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `necessiter` (
-  `ID_INTERVENTION` int(11) NOT NULL,
-  `CODE_SITUATION` varchar(10) NOT NULL,
-  `ID_ENGIN` int(11) NOT NULL,
-  PRIMARY KEY (`ID_INTERVENTION`,`CODE_SITUATION`,`ID_ENGIN`),
-  KEY `FK_NEC_SITUATION` (`CODE_SITUATION`),
-  KEY `FK_NEC_ENGIN` (`ID_ENGIN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `pompier` (
-  `MATRICULE` int(11) NOT NULL AUTO_INCREMENT,
-  `NOM` varchar(50) DEFAULT NULL,
-  `PRENOM` varchar(50) DEFAULT NULL,
-  `DATENAISS` date DEFAULT NULL,
-  `NUMEROTEL` varchar(15) DEFAULT NULL,
-  `NUMEROBIP` int(11) DEFAULT NULL,
-  `ID_GRADE` int(11) DEFAULT NULL,
-  `ID_CASERNE` int(11) DEFAULT NULL,
-  `ID_PROFESSION` int(11) DEFAULT NULL,
-  PRIMARY KEY (`MATRICULE`),
-  KEY `FK_POMPIER_GRADE` (`ID_GRADE`),
-  KEY `FK_POMPIER_CASERNE` (`ID_CASERNE`),
-  KEY `FK_POMPIER_PROF` (`ID_PROFESSION`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `profession` (
-  `ID_PROFESSION` int(11) NOT NULL AUTO_INCREMENT,
-  `LIBELLE` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ID_PROFESSION`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `situation` (
-  `CODE_SITUATION` varchar(10) NOT NULL,
-  `LIBELLE` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`CODE_SITUATION`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `typeengin` (
-  `ID_TYPEENGIN` int(11) NOT NULL AUTO_INCREMENT,
-  `LIBELLE` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ID_TYPEENGIN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
+drop table if exists `engin`;
+drop table if exists `envoyer`;
+drop table if exists `habiliter`;
+drop table if exists `necessiter`;
+drop table if exists `pompier`;
+drop table if exists `caserne`;
+drop table if exists `categoriegrade`;
+drop table if exists `fonction`;
+drop table if exists `grade`;
+drop table if exists `intervention`;
+drop table if exists `profession`;
+drop table if exists `situation`;
+drop table if exists `typeengin`;
 
 -- --------------------------------------------------------
--- 3. INSERTION DES DONNÉES DE RÉFÉRENCE
+-- 2. création des tables
 -- --------------------------------------------------------
 
-INSERT INTO `caserne` (`ID_CASERNE`, `NOM`, `RUE`, `COPOS`, `VILLE`) VALUES
-(1, 'Ifs', 'Rue de la République', '14123', 'Ifs'),
-(2, 'Lisieux', 'Avenue Georges Pompidou', '14100', 'Lisieux'),
-(3, 'Le Hom', 'Route de Condé', '14220', 'Le Hom'),
-(4, 'Caen Folie Couvrechef', 'Avenue de la Folie', '14000', 'Caen'),
-(5, 'Quimper', '10 Avenue Pompiers', '29000', 'Quimper');
+create table `caserne` (
+  `id_caserne` int(11) not null auto_increment,
+  `nom` varchar(100) default null,
+  `rue` varchar(255) default null,
+  `copos` varchar(5) default null,
+  `ville` varchar(100) default null,
+  primary key (`id_caserne`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
-INSERT INTO `categoriegrade` (`ID_CATEGORIEGRADE`, `LIBELLE`) VALUES
-(1, 'Hommes du rang'),
-(2, 'Sous-officiers'),
-(3, 'Officiers');
+create table `categoriegrade` (
+  `id_categoriegrade` int(11) not null auto_increment,
+  `libelle` varchar(100) default null,
+  primary key (`id_categoriegrade`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
-INSERT INTO `grade` (`ID_GRADE`, `LIBELLE`, `ID_CATEGORIEGRADE`) VALUES
-(1, 'Sapeur', 1),
-(2, 'Caporal', 1),
-(3, 'Sergent', 2),
-(4, 'Adjudant', 2),
-(5, 'Lieutenant', 3),
-(6, 'Capitaine', 3),
-(7, 'Commandant', 3);
+create table `engin` (
+  `id_engin` int(11) not null auto_increment,
+  `libelle` varchar(100) default null,
+  `numeroordre` int(11) default null,
+  `id_caserne` int(11) default null,
+  `id_typeengin` int(11) default null,
+  primary key (`id_engin`),
+  key `fk_engin_caserne` (`id_caserne`),
+  key `fk_engin_type` (`id_typeengin`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
-INSERT INTO `profession` (`ID_PROFESSION`, `LIBELLE`) VALUES
-(1, 'Artisan'),
-(2, 'Employé de Mairie'),
-(3, 'Informaticien'),
-(4, 'Mécanicien'),
-(5, 'Sans profession');
+create table `envoyer` (
+  `id_intervention` int(11) not null,
+  `matricule` int(11) not null,
+  primary key (`id_intervention`,`matricule`),
+  key `fk_env_pompier` (`matricule`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
-INSERT INTO `fonction` (`CODE_FONCTION`, `LIBELLE`) VALUES
-('COND_FPT', 'Conducteur fourgon pompe-tonne'),
-('COND_VSR', 'Conducteur véhicule de secours routier'),
-('EQUI_EPA', 'Equiper échelle pivotante automatique'),
-('EQUI_INC', 'Equipier incendie');
+create table `fonction` (
+  `code_fonction` varchar(10) not null,
+  `libelle` varchar(100) default null,
+  primary key (`code_fonction`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
-INSERT INTO `typeengin` (`ID_TYPEENGIN`, `LIBELLE`) VALUES
-(1, 'Fourgon Pompe-Tonne (FPT)'),
-(2, 'Véhicule de Secours Routier (VSR)'),
-(3, 'Echelle Pivotante Automatique (EPA)'),
-(4, 'Véhicule de Secours et d''Assistance aux Victimes (VSAV)');
+create table `grade` (
+  `id_grade` int(11) not null auto_increment,
+  `libelle` varchar(100) default null,
+  `id_categoriegrade` int(11) default null,
+  primary key (`id_grade`),
+  key `fk_grade_cat` (`id_categoriegrade`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
-INSERT INTO `situation` (`CODE_SITUATION`, `LIBELLE`) VALUES
-('AVP', 'Accident sur la Voie Publique'),
-('INC', 'Incendie de bâtiment'),
-('SAP', 'Secours à Personne');
+create table `habiliter` (
+  `matricule` int(11) not null,
+  `code_fonction` varchar(10) not null,
+  primary key (`matricule`,`code_fonction`),
+  key `fk_hab_fonction` (`code_fonction`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
-INSERT INTO `engin` (`ID_ENGIN`, `LIBELLE`, `NUMEROORDRE`, `ID_CASERNE`, `ID_TYPEENGIN`) VALUES
-(1, 'FPT 1 Quimper', 1, 5, 1),
-(2, 'VSR 1 Quimper', 1, 5, 2),
-(3, 'VSAV 1 Ifs', 1, 1, 4),
-(4, 'FPT 1 Lisieux', 1, 2, 1);
+create table `intervention` (
+  `id_intervention` int(11) not null auto_increment,
+  `lieu` varchar(255) default null,
+  `date_inter` date default null,
+  `heureappel` time default null,
+  `heurearrive` time default null,
+  `duree` time default null,
+  primary key (`id_intervention`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
+
+create table `necessiter` (
+  `id_intervention` int(11) not null,
+  `code_situation` varchar(10) not null,
+  `id_engin` int(11) not null,
+  primary key (`id_intervention`,`code_situation`,`id_engin`),
+  key `fk_nec_situation` (`code_situation`),
+  key `fk_nec_engin` (`id_engin`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
+
+create table `pompier` (
+  `matricule` int(11) not null auto_increment,
+  `nom` varchar(50) default null,
+  `prenom` varchar(50) default null,
+  `datenaiss` date default null,
+  `numerotel` varchar(15) default null,
+  `numerobip` int(11) default null,
+  `id_grade` int(11) default null,
+  `id_caserne` int(11) default null,
+  `id_profession` int(11) default null,
+  primary key (`matricule`),
+  key `fk_pompier_grade` (`id_grade`),
+  key `fk_pompier_caserne` (`id_caserne`),
+  key `fk_pompier_prof` (`id_profession`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
+
+create table `profession` (
+  `id_profession` int(11) not null auto_increment,
+  `libelle` varchar(100) default null,
+  primary key (`id_profession`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
+
+create table `situation` (
+  `code_situation` varchar(10) not null,
+  `libelle` varchar(100) default null,
+  primary key (`code_situation`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
+
+create table `typeengin` (
+  `id_typeengin` int(11) not null auto_increment,
+  `libelle` varchar(100) default null,
+  primary key (`id_typeengin`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
 
 -- --------------------------------------------------------
--- 4. INSERTION DES POMPIERS (Données complétées)
+-- 3. insertion des données de référence
 -- --------------------------------------------------------
 
-INSERT INTO `pompier` (`MATRICULE`, `NOM`, `PRENOM`, `DATENAISS`, `NUMEROTEL`, `NUMEROBIP`, `ID_GRADE`, `ID_CASERNE`, `ID_PROFESSION`) VALUES
-(1, 'LEROY', 'Pierrick', '1995-04-12', '0601020304', 101, 1, 1, 3),
-(2, 'MASSON', 'Bastien', '1992-08-22', '0611223344', 102, 2, 1, 4),
-(3, 'DUVAL', 'Matthias', '1988-11-05', '0622334455', 103, 3, 4, 1),
-(4, 'MADJI', 'Walid', '1998-02-18', '0633445566', 104, 1, 4, 5),
-(6, 'CHAUVEL', 'Jules', '1998-02-18', '0633445567', 106, 1, 1, 5),
-(7, 'CAUVIN', 'Nayah', '1998-02-18', '0633445568', 107, 1, 1, 5),
-(8, 'TRAORE', 'Sylvain', '1985-06-30', '0644556677', 108, 5, 3, 2),
-(9, 'BOULEAU', 'Line', '1990-01-15', '0655667788', 109, 2, 3, 3),
-(10, 'MANCEL', 'Florianne', '1993-07-21', '0666778899', 110, 1, 2, 5),
-(11, 'PONTIER', 'Claire', '1987-12-05', '0677889900', 111, 4, 2, 1),
-(12, 'BARON', 'Gwladys', '1996-03-30', '0688990011', 112, 1, 3, 4),
-(13, 'PASTOR', 'Lucas', '1991-09-14', '0699001122', 113, 2, 1, 2),
-(14, 'BAREAU', 'Mila', '1999-05-25', '0612345678', 114, 1, 1, 5),
--- Intégration de Robert Dumontel d'après le cahier des charges
-(986995, 'Dumontel', 'Robert', '1969-01-10', '02 98 56 85 42', 15, 6, 5, 2);
+insert into `caserne` (`id_caserne`, `nom`, `rue`, `copos`, `ville`) values
+(1, 'ifs', 'rue de la république', '14123', 'ifs'),
+(2, 'lisieux', 'avenue georges pompidou', '14100', 'lisieux'),
+(3, 'le hom', 'route de condé', '14220', 'le hom'),
+(4, 'caen folie couvrechef', 'avenue de la folie', '14000', 'caen'),
+(5, 'quimper', '10 avenue pompiers', '29000', 'quimper');
+
+insert into `categoriegrade` (`id_categoriegrade`, `libelle`) values
+(1, 'hommes du rang'),
+(2, 'sous-officiers'),
+(3, 'officiers');
+
+insert into `grade` (`id_grade`, `libelle`, `id_categoriegrade`) values
+(1, 'sapeur', 1),
+(2, 'caporal', 1),
+(3, 'sergent', 2),
+(4, 'adjudant', 2),
+(5, 'lieutenant', 3),
+(6, 'capitaine', 3),
+(7, 'commandant', 3);
+
+insert into `profession` (`id_profession`, `libelle`) values
+(1, 'artisan'),
+(2, 'employé de mairie'),
+(3, 'informaticien'),
+(4, 'mécanicien'),
+(5, 'sans profession');
+
+insert into `fonction` (`code_fonction`, `libelle`) values
+('cond_fpt', 'conducteur fourgon pompe-tonne'),
+('cond_vsr', 'conducteur véhicule de secours routier'),
+('equi_epa', 'equiper échelle pivotante automatique'),
+('equi_inc', 'equipier incendie');
+
+insert into `typeengin` (`id_typeengin`, `libelle`) values
+(1, 'fourgon pompe-tonne (fpt)'),
+(2, 'véhicule de secours routier (vsr)'),
+(3, 'echelle pivotante automatique (epa)'),
+(4, 'véhicule de secours et d''assistance aux victimes (vsav)');
+
+insert into `situation` (`code_situation`, `libelle`) values
+('avp', 'accident sur la voie publique'),
+('inc', 'incendie de bâtiment'),
+('sap', 'secours à personne');
+
+insert into `engin` (`id_engin`, `libelle`, `numeroordre`, `id_caserne`, `id_typeengin`) values
+(1, 'fpt 1 quimper', 1, 5, 1),
+(2, 'vsr 1 quimper', 1, 5, 2),
+(3, 'vsav 1 ifs', 1, 1, 4),
+(4, 'fpt 1 lisieux', 1, 2, 1);
 
 
 -- --------------------------------------------------------
--- 5. INSERTION DES HABILITATIONS (Robert Dumontel)
+-- 4. insertion des pompiers (données complétées)
 -- --------------------------------------------------------
 
-INSERT INTO `habiliter` (`MATRICULE`, `CODE_FONCTION`) VALUES
-(986995, 'COND_FPT'),
-(986995, 'COND_VSR'),
-(986995, 'EQUI_EPA'),
-(986995, 'EQUI_INC');
+insert into `pompier` (`matricule`, `nom`, `prenom`, `datenaiss`, `numerotel`, `numerobip`, `id_grade`, `id_caserne`, `id_profession`) values
+(1, 'leroy', 'pierrick', '1995-04-12', '0601020304', 101, 1, 1, 3),
+(2, 'masson', 'bastien', '1992-08-22', '0611223344', 102, 2, 1, 4),
+(3, 'duval', 'matthias', '1988-11-05', '0622334455', 103, 3, 4, 1),
+(4, 'madji', 'walid', '1998-02-18', '0633445566', 104, 1, 4, 5),
+(6, 'chauvel', 'jules', '1998-02-18', '0633445567', 106, 1, 1, 5),
+(7, 'cauvin', 'nayah', '1998-02-18', '0633445568', 107, 1, 1, 5),
+(8, 'traore', 'sylvain', '1985-06-30', '0644556677', 108, 5, 3, 2),
+(9, 'bouleau', 'line', '1990-01-15', '0655667788', 109, 2, 3, 3),
+(10, 'mancel', 'florianne', '1993-07-21', '0666778899', 110, 1, 2, 5),
+(11, 'pontier', 'claire', '1987-12-05', '0677889900', 111, 4, 2, 1),
+(12, 'baron', 'gwladys', '1996-03-30', '0688990011', 112, 1, 3, 4),
+(13, 'pastor', 'lucas', '1991-09-14', '0699001122', 113, 2, 1, 2),
+(14, 'bareau', 'mila', '1999-05-25', '0612345678', 114, 1, 1, 5),
+-- intégration de robert dumontel d'après le cahier des charges
+(986995, 'dumontel', 'robert', '1969-01-10', '02 98 56 85 42', 15, 6, 5, 2);
 
 
 -- --------------------------------------------------------
--- 6. INSERTION D'UNE INTERVENTION DE TEST
+-- 5. insertion des habilitations (robert dumontel)
 -- --------------------------------------------------------
 
-INSERT INTO `intervention` (`ID_INTERVENTION`, `LIEU`, `DATE_INTER`, `HEUREAPPEL`, `HEUREARRIVE`, `DUREE`) VALUES
-(1, '15 Rue de Brest, Quimper', '2026-03-25', '14:30:00', '14:42:00', '02:15:00');
+insert into `habiliter` (`matricule`, `code_fonction`) values
+(986995, 'cond_fpt'),
+(986995, 'cond_vsr'),
+(986995, 'equi_epa'),
+(986995, 'equi_inc');
 
-INSERT INTO `necessiter` (`ID_INTERVENTION`, `CODE_SITUATION`, `ID_ENGIN`) VALUES
-(1, 'INC', 1);
 
-INSERT INTO `envoyer` (`ID_INTERVENTION`, `MATRICULE`) VALUES
+-- --------------------------------------------------------
+-- 6. insertion d'une intervention de test
+-- --------------------------------------------------------
+
+insert into `intervention` (`id_intervention`, `lieu`, `date_inter`, `heureappel`, `heurearrive`, `duree`) values
+(1, '15 rue de brest, quimper', '2026-03-25', '14:30:00', '14:42:00', '02:15:00');
+
+insert into `necessiter` (`id_intervention`, `code_situation`, `id_engin`) values
+(1, 'inc', 1);
+
+insert into `envoyer` (`id_intervention`, `matricule`) values
 (1, 986995),
 (1, 1),
 (1, 2);
 
 
 -- --------------------------------------------------------
--- 7. RESTAURATION DES CONTRAINTES DE CLÉS ÉTRANGÈRES
+-- 7. restauration des contraintes de clés étrangères
 -- --------------------------------------------------------
 
-ALTER TABLE `engin`
-  ADD CONSTRAINT `FK_ENGIN_CASERNE` FOREIGN KEY (`ID_CASERNE`) REFERENCES `caserne` (`ID_CASERNE`),
-  ADD CONSTRAINT `FK_ENGIN_TYPE` FOREIGN KEY (`ID_TYPEENGIN`) REFERENCES `typeengin` (`ID_TYPEENGIN`);
+alter table `engin`
+  add constraint `fk_engin_caserne` foreign key (`id_caserne`) references `caserne` (`id_caserne`),
+  add constraint `fk_engin_type` foreign key (`id_typeengin`) references `typeengin` (`id_typeengin`);
 
-ALTER TABLE `envoyer`
-  ADD CONSTRAINT `FK_ENV_INTER` FOREIGN KEY (`ID_INTERVENTION`) REFERENCES `intervention` (`ID_INTERVENTION`),
-  ADD CONSTRAINT `FK_ENV_POMPIER` FOREIGN KEY (`MATRICULE`) REFERENCES `pompier` (`MATRICULE`);
+alter table `envoyer`
+  add constraint `fk_env_inter` foreign key (`id_intervention`) references `intervention` (`id_intervention`),
+  add constraint `fk_env_pompier` foreign key (`matricule`) references `pompier` (`matricule`);
 
-ALTER TABLE `grade`
-  ADD CONSTRAINT `FK_GRADE_CAT` FOREIGN KEY (`ID_CATEGORIEGRADE`) REFERENCES `categoriegrade` (`ID_CATEGORIEGRADE`);
+alter table `grade`
+  add constraint `fk_grade_cat` foreign key (`id_categoriegrade`) references `categoriegrade` (`id_categoriegrade`);
 
-ALTER TABLE `habiliter`
-  ADD CONSTRAINT `FK_HAB_FONCTION` FOREIGN KEY (`CODE_FONCTION`) REFERENCES `fonction` (`CODE_FONCTION`),
-  ADD CONSTRAINT `FK_HAB_POMPIER` FOREIGN KEY (`MATRICULE`) REFERENCES `pompier` (`MATRICULE`);
+alter table `habiliter`
+  add constraint `fk_hab_fonction` foreign key (`code_fonction`) references `fonction` (`code_fonction`),
+  add constraint `fk_hab_pompier` foreign key (`matricule`) references `pompier` (`matricule`);
 
-ALTER TABLE `necessiter`
-  ADD CONSTRAINT `FK_NEC_ENGIN` FOREIGN KEY (`ID_ENGIN`) REFERENCES `engin` (`ID_ENGIN`),
-  ADD CONSTRAINT `FK_NEC_INTER` FOREIGN KEY (`ID_INTERVENTION`) REFERENCES `intervention` (`ID_INTERVENTION`),
-  ADD CONSTRAINT `FK_NEC_SITUATION` FOREIGN KEY (`CODE_SITUATION`) REFERENCES `situation` (`CODE_SITUATION`);
+alter table `necessiter`
+  add constraint `fk_nec_engin` foreign key (`id_engin`) references `engin` (`id_engin`),
+  add constraint `fk_nec_inter` foreign key (`id_intervention`) references `intervention` (`id_intervention`),
+  add constraint `fk_nec_situation` foreign key (`code_situation`) references `situation` (`code_situation`);
 
-ALTER TABLE `pompier`
-  ADD CONSTRAINT `FK_POMPIER_CASERNE` FOREIGN KEY (`ID_CASERNE`) REFERENCES `caserne` (`ID_CASERNE`),
-  ADD CONSTRAINT `FK_POMPIER_GRADE` FOREIGN KEY (`ID_GRADE`) REFERENCES `grade` (`ID_GRADE`),
-  ADD CONSTRAINT `FK_POMPIER_PROF` FOREIGN KEY (`ID_PROFESSION`) REFERENCES `profession` (`ID_PROFESSION`);
+alter table `pompier`
+  add constraint `fk_pompier_caserne` foreign key (`id_caserne`) references `caserne` (`id_caserne`),
+  add constraint `fk_pompier_grade` foreign key (`id_grade`) references `grade` (`id_grade`),
+  add constraint `fk_pompier_prof` foreign key (`id_profession`) references `profession` (`id_profession`);
 
-SET FOREIGN_KEY_CHECKS = 1;
-COMMIT;
+set foreign_key_checks = 1;
+commit;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 set character_set_client=@old_character_set_client */;
+/*!40101 set character_set_results=@old_character_set_results */;
+/*!40101 set collation_connection=@old_collation_connection */;
