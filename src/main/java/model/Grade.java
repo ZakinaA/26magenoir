@@ -9,17 +9,17 @@ package model;
  */
 
 public class Grade {
-    private int id;
+    private int id_grade;
     private String libelle;
-    private CategorieGrade categorieGrade ;
+    private CategorieGrade id_categorieGrade ;
 
     public Grade() {}
     
-    public int getId() { 
-        return id;
+    public int getId_grade() { 
+        return id_grade;
     }
-    public void setId(int id) { 
-        this.id = id; 
+    public void setId_grade(int id_grade) { 
+        this.id_grade = id_grade; 
     }
     public String getLibelle() { 
         return libelle;
@@ -28,12 +28,12 @@ public class Grade {
         this.libelle = libelle; 
     }
 
-    public CategorieGrade getCategorieGrade() {
-        return categorieGrade;
+    public CategorieGrade getId_CategorieGrade() {
+        return id_categorieGrade;
     }
 
-    public void setCategorieGrade(CategorieGrade categorieGrade) {
-        this.categorieGrade = categorieGrade;
+    public void setCategorieGrade(CategorieGrade id_categorieGrade) {
+        this.id_categorieGrade = id_categorieGrade;
     }
     
 }

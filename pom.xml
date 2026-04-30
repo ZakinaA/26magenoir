@@ -5,8 +5,7 @@
     <artifactId>sdisweb</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>sdisweb-1.0-SNAPSHOT</name>
-    <name>26magenoir02</name>
+    <name>26magenoir</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,3 +45,4 @@
             </plugin>
         </plugins>
     </build>
+</project>

@@ -65,12 +65,12 @@ public class DaoPompier {
                 p.setUneCaserne(c);
 
                 Grade g = new Grade();
-                g.setId(resultatRequete.getInt("g_id"));
+                g.setId_grade(resultatRequete.getInt("g_id"));
                 g.setLibelle(resultatRequete.getString("g_libelle"));
                 
                 // NOUVEAU : Mapping de la catégorie
                 CategorieGrade cg = new CategorieGrade();
-                cg.setId(resultatRequete.getInt("cg_id"));
+                cg.setId_categoriegrade(resultatRequete.getInt("cg_id"));
                 cg.setLibelle(resultatRequete.getString("cg_libelle"));
                 g.setCategorieGrade(cg);
                 

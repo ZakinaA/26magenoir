@@ -8,12 +8,12 @@
 package model;
 
 public class CategorieGrade {
-    private int id;
+    private int id_categoriegrade;
     private String libelle;
 
     public CategorieGrade() {}
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId_categoriegrade() { return id_categoriegrade; }
+    public void setId_categoriegrade(int id) { this.id_categoriegrade = id_categoriegrade; }
     public String getLibelle() { return libelle; }
     public void setLibelle(String libelle) { this.libelle = libelle; }
 }
