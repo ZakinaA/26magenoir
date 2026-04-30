@@ -28,6 +28,10 @@
         <url-pattern>/ServletPompier/modifier</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>ServletPompier</servlet-name>
+        <url-pattern>/ServletPompier/supprimer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>ServletCaserne</servlet-name>
         <url-pattern>/ServletCaserne</url-pattern>
     </servlet-mapping>
@@ -46,6 +50,10 @@
     <servlet-mapping>
         <servlet-name>ServletCaserne</servlet-name>
         <url-pattern>/ServletCaserne/engins</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletCaserne</servlet-name>
+        <url-pattern>/ServletCaserne/supprimer</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package database;
 
 import java.sql.Connection;
@@ -11,17 +7,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Caserne;
 
-/**
- *
- * @author zakina
- */
 public class DaoCaserne {
     
     Connection cnx;
     static PreparedStatement requeteSql = null;
     static ResultSet resultatRequete = null;
 
-    
     public static ArrayList<Caserne> getLesCasernes(Connection cnx){
         ArrayList<Caserne> lesCasernes= new ArrayList<Caserne>();
         try{
@@ -72,5 +63,31 @@ public class DaoCaserne {
             requeteSql.executeUpdate();
         } catch (SQLException e){ e.printStackTrace(); }
         return c;
+    }
+
+    // NOUVEAUTÉ : La méthode pour supprimer une caserne
+    public static void deleteCaserne(Connection cnx, int idCaserne) {
+        try {
+            
+            PreparedStatement requeteEngins = cnx.prepareStatement("DELETE FROM engin WHERE id_caserne = ?");
+            requeteEngins.setInt(1, idCaserne);
+            requeteEngins.executeUpdate();
+
+            
+            PreparedStatement requetePompiers = cnx.prepareStatement("DELETE FROM pompier WHERE id_caserne = ?");
+            requetePompiers.setInt(1, idCaserne);
+            requetePompiers.executeUpdate();
+
+            
+            PreparedStatement requeteCaserne = cnx.prepareStatement("DELETE FROM caserne WHERE id_caserne = ?");
+            requeteCaserne.setInt(1, idCaserne);
+            requeteCaserne.executeUpdate();
+
+            System.out.println("Caserne et toutes ses dépendances supprimées avec succès !");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la suppression en cascade de la caserne.");
+        }
     }
 }

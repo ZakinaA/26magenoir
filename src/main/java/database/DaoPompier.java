@@ -40,12 +40,12 @@ public class DaoPompier {
                 "select p.matricule as p_id, p.nom as p_nom, p.prenom as p_prenom, p.datenaiss as p_datenaiss, " +
                 "c.id_caserne as c_id, c.nom as c_nom, " +
                 "g.id_grade as g_id, g.libelle as g_libelle, " +
-                "cg.id_categoriegrade as cg_id, cg.libelle as cg_libelle, " + // NOUVEAU
+                "cg.id_categoriegrade as cg_id, cg.libelle as cg_libelle, " + 
                 "pr.id_profession as pr_id, pr.libelle as pr_libelle " +
                 "from pompier p " +
                 "left join caserne c on p.id_caserne = c.id_caserne " +
                 "left join grade g on p.id_grade = g.id_grade " +
-                "left join categoriegrade cg on g.id_categoriegrade = cg.id_categoriegrade " + // NOUVEAU
+                "left join categoriegrade cg on g.id_categoriegrade = cg.id_categoriegrade " + 
                 "left join profession pr on p.id_profession = pr.id_profession " +
                 "where p.matricule = ?"
             );
@@ -68,7 +68,6 @@ public class DaoPompier {
                 g.setId(resultatRequete.getInt("g_id"));
                 g.setLibelle(resultatRequete.getString("g_libelle"));
                 
-                // NOUVEAU : Mapping de la catégorie
                 CategorieGrade cg = new CategorieGrade();
                 cg.setId(resultatRequete.getInt("cg_id"));
                 cg.setLibelle(resultatRequete.getString("cg_libelle"));
@@ -98,12 +97,11 @@ public class DaoPompier {
                 p.setId(resultatRequete.getInt(1));
             }
         } catch (SQLException e) { e.printStackTrace(); }
-        return p;    
+        return p;   
     }
     
     public static Pompier updatePompier(Connection cnx, Pompier p){
         try{
-            // On met à jour les champs 
             requeteSql = cnx.prepareStatement("update pompier set nom = ?, prenom = ?, datenaiss = ? where matricule = ?");
             requeteSql.setString(1, p.getNom());
             requeteSql.setString(2, p.getPrenom());
@@ -112,5 +110,33 @@ public class DaoPompier {
             requeteSql.executeUpdate();
         } catch (SQLException e){ e.printStackTrace(); }
         return p;
+    }
+
+    // NOUVEAUTÉ : La méthode de suppression
+    public static void deletePompier(Connection cnx, int idPompier) {
+        try {
+            // ÉTAPE 1 : LA CASCADE MANUELLE
+
+            //On retire les habilitations
+            PreparedStatement reqHabiliter = cnx.prepareStatement("DELETE FROM habiliter WHERE MATRICULE = ?");
+            reqHabiliter.setInt(1, idPompier);
+            reqHabiliter.executeUpdate();
+
+            //On retire le pompier de toutes les interventions
+            PreparedStatement reqEnvoyer = cnx.prepareStatement("DELETE FROM envoyer WHERE MATRICULE = ?");
+            reqEnvoyer.setInt(1, idPompier);
+            reqEnvoyer.executeUpdate();
+
+            //et maintenenant on suppr
+            PreparedStatement requeteSql = cnx.prepareStatement("DELETE FROM pompier WHERE MATRICULE = ?");
+            requeteSql.setInt(1, idPompier);
+            requeteSql.executeUpdate();
+            
+            System.out.println("Pompier et toutes ses traces supprimés avec succès !");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la suppression en cascade du pompier.");
+        }
     }
 }

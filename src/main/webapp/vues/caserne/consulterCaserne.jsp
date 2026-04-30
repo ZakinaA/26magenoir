@@ -2,52 +2,54 @@
 <%@page import="model.Caserne"%>
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Détail Caserne</title>
-    <style>
-        .container { width: 50%; margin: 20px auto; font-family: Arial, sans-serif; }
-        .card { border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 2px 2px 12px #eee; }
-        .label { font-weight: bold; color: #555; margin-top: 10px; }
-        .value { margin-bottom: 15px; font-size: 1.1em; }
-    </style>
-</head>
-<body>
-    <div class="container"> <div class="header-left">
+    <head>
+        <meta charset="UTF-8">
+        <title>Détails de la Caserne</title>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            .info-box { border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f9f9f9; margin-top: 20px;}
+            .btn-menu { display: inline-block; padding: 10px 20px; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px; font-weight: bold;}
+            .btn-modifier { background-color: #ffc107; color: black; }
+            .btn-supprimer { background-color: #dc3545; }
+            .btn-retour { background-color: #6c757d; }
+            .btn-engins { background-color: #17a2b8; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <%-- Inclusion du Header --%>
             <jsp:include page="/vues/inclusions/header.jsp" />
-        </div>
-    <div class="container">
-        <h1>Détail de la Caserne</h1>
-        <%
-            Caserne c = (Caserne)request.getAttribute("pCaserne");
-            if (c != null) {
-        %>
-            <div class="card">
-                <div class="label">ID Caserne :</div>
-                <div class="value"><%= c.getId() %></div>
 
-                <div class="label">Nom :</div>
-                <div class="value"><%= c.getNom() %></div>
+            <% Caserne c = (Caserne) request.getAttribute("pCaserne"); %>
 
-                <div class="label">Rue :</div>
-                <div class="value"><%= (c.getRue() != null) ? c.getRue() : "Non renseignée" %></div>
+            <h1>Détails de la Caserne</h1>
 
-                <div class="label">Code Postal :</div>
-                <div class="value"><%= (c.getCopos() != null) ? c.getCopos() : "Non renseigné" %></div>
+            <% if (c != null) { %>
+                <div class="info-box">
+                    <p><strong>ID :</strong> <%= c.getId() %></p>
+                    <p><strong>Nom :</strong> <%= c.getNom() %></p>
+                    <p><strong>Rue :</strong> <%= c.getRue() %></p>
+                    <p><strong>Code Postal :</strong> <%= c.getCopos() %></p>
+                    <p><strong>Ville :</strong> <%= c.getVille() %></p>
+                </div>
 
-                <div class="label">Ville :</div>
-                <div class="value"><%= (c.getVille() != null) ? c.getVille() : "Non renseignée" %></div>
-            </div>
-        <% } else { %>
-            <p style="color:red;">Erreur : Impossible de trouver cette caserne.</p>
-        <% } %>
-        <br>
-        <a href="../ServletCaserne/modifier?idCaserne=<%= c.getId() %>" style="display:inline-block; padding:10px; background-color:#ADD8E6; color:black; text-decoration:none; border-radius:5px;">✏️ Modifier</a>
-        <br>
-        <div class="container"> <div class="header-left">
+                <div style="margin-top: 20px;">
+                    <a href="../ServletCaserne/engins?idCaserne=<%= c.getId() %>" class="btn-menu btn-engins">Voir les engins</a>
+                    
+                    <a href="../ServletCaserne/modifier?idCaserne=<%= c.getId() %>" class="btn-menu btn-modifier">Modifier</a>
+                    
+                    <!-- NOUVEAUTÉ : Bouton Supprimer avec confirmation JS -->
+                    <a href="../ServletCaserne/supprimer?idCaserne=<%= c.getId() %>" class="btn-menu btn-supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette caserne ? Cette action est irréversible.');">Supprimer</a>
+
+                    <a href="../ServletCaserne/lister" class="btn-menu btn-retour">Retour à la liste</a>
+                </div>
+            <% } else { %>
+                <p>Caserne introuvable.</p>
+                <a href="../ServletCaserne/lister" class="btn-menu btn-retour">Retour à la liste</a>
+            <% } %>
+
+            <%-- Inclusion du Footer --%>
             <jsp:include page="/vues/inclusions/footer.jsp" />
         </div>
-        <br>
-        <a href="../ServletPompier/lister">← Retour à la liste des pompiers</a>
-    </div>
-</body>
+    </body>
 </html>

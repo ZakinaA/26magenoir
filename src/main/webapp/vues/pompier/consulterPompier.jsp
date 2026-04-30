@@ -12,10 +12,9 @@
     </style>
 </head>
 <body>
-    <div class="container"> <div class="header-left">
-            <jsp:include page="/vues/inclusions/header.jsp" />
-        </div>
     <div class="container">
+        <jsp:include page="/vues/inclusions/header.jsp" />
+        
         <h1>Détail du Pompier</h1>
         <%
             Pompier p = (Pompier)request.getAttribute("pPompier");
@@ -49,17 +48,22 @@
                 <div class="value"><%= (p.getUneCaserne() != null && p.getUneCaserne().getNom() != null) ? p.getUneCaserne().getNom() : "Non affecté" %></div>
                 
             </div>
+            
+            <div style="margin-top: 20px; margin-bottom: 20px;">
+                <a href="../ServletPompier/modifier?idPompier=<%= p.getId() %>" style="display:inline-block; padding:10px 15px; background-color:#ffc107; color:black; text-decoration:none; border-radius:5px; font-weight: bold;">✏️ Modifier</a>
+                
+                <!-- NOUVEAUTÉ : Bouton Supprimer avec popup JS -->
+                <a href="../ServletPompier/supprimer?idPompier=<%= p.getId() %>" style="display:inline-block; padding:10px 15px; background-color:#dc3545; color:white; text-decoration:none; border-radius:5px; font-weight: bold; margin-left: 10px;" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce pompier ?');">🗑️ Supprimer</a>
+            </div>
         <% } else { %>
             <p style="color:red;">Erreur : Impossible de trouver ce pompier.</p>
         <% } %>
-        <br>
-        <a href="../ServletPompier/modifier?idPompier=<%= p.getId() %>" style="display:inline-block; padding:10px; background-color:#ffc107; color:black; text-decoration:none; border-radius:5px;">✏️ Modifier</a>
-        <br>
-        <div class="container"> <div class="header-left">
+        
+        <a href="../ServletPompier/lister" style="text-decoration:none; color: #007bff; font-weight: bold;">← Retour à la liste</a>
+        
+        <div style="margin-top: 40px;">
             <jsp:include page="/vues/inclusions/footer.jsp" />
         </div>
-        <br>
-        <a href="../ServletPompier/lister">← Retour à la liste</a>
     </div>
 </body>
 </html>

@@ -15,13 +15,14 @@ import java.util.ArrayList;
 import model.Caserne;
 import model.Engin;
 
-@WebServlet(name = "ServletCaserne", urlPatterns = {"/ServletCaserne/consulter", "/ServletCaserne/lister" ,"/ServletCaserne/modifier", "/ServletCaserne/engins"})
+// NOUVEAUTÉ : Ajout de /ServletCaserne/supprimer dans les urlPatterns
+@WebServlet(name = "ServletCaserne", urlPatterns = {"/ServletCaserne/consulter", "/ServletCaserne/lister" ,"/ServletCaserne/modifier", "/ServletCaserne/engins", "/ServletCaserne/supprimer"})
 public class ServletCaserne extends HttpServlet {
 
     Connection cnx;
 
     @Override
-    public void init() {     
+    public void init() {      
         ServletContext servletContext = getServletContext();
         cnx = (Connection) servletContext.getAttribute("connection");     
     }
@@ -61,19 +62,23 @@ public class ServletCaserne extends HttpServlet {
             request.setAttribute("pCaserne", c);
             getServletContext().getRequestDispatcher("/vues/caserne/modifierCaserne.jsp").forward(request, response);
         }
+        
         if (url.equals("/sdisweb/ServletCaserne/engins")) {
-        int idCaserne = Integer.parseInt(request.getParameter("idCaserne"));
-    
-        // Récupération de la liste des engins et des infos de la caserne
-        ArrayList<Engin> lesEngins = DaoEngin.getLesEnginsByCaserne(cnx, idCaserne);
-        Caserne c = DaoCaserne.getCaserneById(cnx, idCaserne);
-    
-        // Stockage dans les attributs de la requête
-        request.setAttribute("pLesEngins", lesEngins);
-        request.setAttribute("pCaserne", c);
-    
-        // Redirection vers la vue (placée dans le dossier vues/caserne pour la cohérence)
-        getServletContext().getRequestDispatcher("/vues/caserne/listerEnginsCaserne.jsp").forward(request, response);
+            int idCaserne = Integer.parseInt(request.getParameter("idCaserne"));
+            ArrayList<Engin> lesEngins = DaoEngin.getLesEnginsByCaserne(cnx, idCaserne);
+            Caserne c = DaoCaserne.getCaserneById(cnx, idCaserne);
+            request.setAttribute("pLesEngins", lesEngins);
+            request.setAttribute("pCaserne", c);
+            getServletContext().getRequestDispatcher("/vues/caserne/listerEnginsCaserne.jsp").forward(request, response);
+        }
+
+        // NOUVEAUTÉ : La route pour réceptionner le clic "Supprimer"
+        if(url.equals("/sdisweb/ServletCaserne/supprimer")) {
+            int idCaserne = Integer.parseInt(request.getParameter("idCaserne"));
+            
+            DaoCaserne.deleteCaserne(cnx, idCaserne); // On supprime en BDD
+            
+            response.sendRedirect(request.getContextPath() + "/ServletCaserne/lister"); // On retourne à la liste
         }
     }
 
@@ -91,7 +96,6 @@ public class ServletCaserne extends HttpServlet {
             
             DaoCaserne.updateCaserne(cnx, c);
             
-            // Redirection vers la page de consultation de la caserne modifiée
             response.sendRedirect(request.getContextPath() + "/ServletCaserne/consulter?idCaserne=" + c.getId());
         }
     }
