@@ -47,6 +47,14 @@
     <servlet-name>ServletCaserne</servlet-name>
     <url-pattern>/ServletCaserne/engins</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ServletGrade</servlet-name>
+        <servlet-class>servlet.ServletGrade</servlet-class>
+    </servlet>
+        <servlet-mapping>
+        <servlet-name>ServletGrade</servlet-name>
+        <url-pattern>/ServletGrade/consulter</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
